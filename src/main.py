@@ -1,5 +1,5 @@
 from org.apache.flink.streaming.api.functions.source import SourceFunction
-from org.apache.flink.api.common.functions import FlatMapFunction, ReduceFunction
+from org.apache.flink.api.common.functions import MapFunction, ReduceFunction, FilterFunction 
 from org.apache.flink.api.java.functions import KeySelector
 from org.apache.flink.streaming.api.windowing.time.Time import milliseconds
 
@@ -37,11 +37,11 @@ def main(factory):
     # Data format
     # cab_id|cab_type|cab_number_plate|cab_driver_name|ongoing_trip/not|pickup_location|destination|passenger_count
     text = env.read_text_file("file:///cab-flink.txt") \
-        .filer(FilterDestination()) \
+        .filter(FilterDestination()) \
         .map(CountDest()) \
-        .time_window(milliseconds(50)) \
-        .pritn()\
-    # text.write_text_file("file:///parsed_destinations.txt")
+        .write_as_text("file:///parsed_destinations.txt")
+        # .time_window(milliseconds(50)) \
+    # text.print()
 
     # text1 = env.read_text_file("file:///cab-flink.txt")         
     #     .group_by(GroupBy()) \
